@@ -1,8 +1,19 @@
-FROM node:6.10.3
-WORKDIR /web-server
+FROM node:carbon
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
+
+RUN npm install
+# If you are building your code for production
+# RUN npm install --only=production
+
+# Bundle app source
 COPY . .
-RUN npm config set registry https://registry.npm.taobao.org \
-    && npm config get registry
-RUN npm install \
-    && npm run build
-CMD ["tail", "-f", "/var/log/faillog"]
+
+EXPOSE 3000
+CMD [ "npm", "start" ]
